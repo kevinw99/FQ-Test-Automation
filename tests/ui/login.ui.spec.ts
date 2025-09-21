@@ -56,4 +56,17 @@ test.describe('Login Page UI Tests', () => {
       await expect(loginPage.passwordInput).toHaveAttribute('type', 'text');
     }
   });
+
+  // Intentional failing test to capture screenshots
+  test('should demonstrate screenshot capture on failure', async ({ page }) => {
+    await loginPage.login(config.testUser.email, config.testUser.password);
+
+    // Wait for dashboard to load
+    await expect(dashboardPage.userNameDisplay).toBeVisible();
+
+    // This assertion will intentionally fail to trigger screenshot capture
+    await expect(page.locator('[data-testid="non-existent-element"]')).toBeVisible({
+      timeout: 5000
+    });
+  });
 });
