@@ -51,16 +51,34 @@ export default defineConfig({
 
   webServer: [
     {
+      command: 'cd services/user-service && node server.js',
+      port: 3002,
+      reuseExistingServer: !process.env.CI,
+      timeout: 180 * 1000, // 3 minutes
+    },
+    {
+      command: 'cd services/transaction-service && node server.js',
+      port: 3003,
+      reuseExistingServer: !process.env.CI,
+      timeout: 180 * 1000, // 3 minutes
+    },
+    {
+      command: 'cd services/notification-service && node server.js',
+      port: 3004,
+      reuseExistingServer: !process.env.CI,
+      timeout: 180 * 1000, // 3 minutes
+    },
+    {
+      command: 'cd services/api-gateway && node server.js',
+      port: 3001,
+      reuseExistingServer: !process.env.CI,
+      timeout: 180 * 1000, // 3 minutes
+    },
+    {
       command: 'cd mock-backend && node server.js',
       port: 3000,
       reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000, // 2 minutes
-    },
-    {
-      command: 'cd mock-backend && node services/api-gateway.js',
-      port: 3001,
-      reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000, // 2 minutes
+      timeout: 180 * 1000, // 3 minutes
     }
   ],
 });

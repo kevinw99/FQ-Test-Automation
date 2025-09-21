@@ -1,33 +1,37 @@
 # Fintech Test Automation Framework
 
-A comprehensive test automation framework for testing microservices architecture in a fintech application using Playwright with TypeScript.
+A comprehensive test automation framework for testing a fintech application using Playwright with TypeScript.
 
 ## Architecture Overview
 
-This framework tests the following microservices:
-- **User Service** (Node.js/Express + MongoDB)
-- **Transaction Service** (Node.js/Express + MongoDB)
-- **Notification Service** (Node.js/Express + Redis)
-- **API Gateway** (Routes requests to services)
+This framework tests a **mock fintech system** with the following components:
+- **UI Server** (port 3000) - Serves the frontend application (login, dashboard, transactions pages)
+- **API Gateway** (port 3001) - Single entry point that includes mock implementations of:
+  - User Service (authentication, user management)
+  - Transaction Service (transaction processing, history)
+  - Notification Service (email, SMS, push notifications)
+
+The system uses an **API Gateway pattern** with mock in-memory data stores rather than separate microservices.
 
 ## Framework Features
 
 ### ✅ API Testing
 - Comprehensive REST API test coverage
-- Service-specific test suites
+- Service-specific test suites (users, transactions, notifications)
 - Authentication and authorization testing
 - Data validation and error handling
+- Automatic backend server startup
 
 ### ✅ UI Testing
 - Page Object Model implementation
-- Cross-browser testing support
-- Responsive design testing
+- Cross-browser testing support (Chrome, Firefox, WebKit)
 - User journey automation
+- Automatic backend server startup
 
 ### ✅ Test Data Management
 - Faker.js integration for dynamic test data
 - Test data generators for all entities
-- Data cleanup and isolation
+- In-memory data isolation between tests
 - Environment-specific configurations
 
 ### ✅ Reporting & Analytics
@@ -132,28 +136,35 @@ npm run test:report
 Configure the following in your `.env` file:
 
 ```env
-# Base URLs
-BASE_URL=http://localhost:3000
-API_BASE_URL=http://localhost:3001
-
-# Service endpoints
-USER_SERVICE_URL=http://localhost:3002
-TRANSACTION_SERVICE_URL=http://localhost:3003
-NOTIFICATION_SERVICE_URL=http://localhost:3004
-
-# Database connections
-MONGODB_URL=mongodb://localhost:27017/fintech_test
-REDIS_URL=redis://localhost:6379
+# Base URLs (Main servers)
+BASE_URL=http://localhost:3000          # UI Server
+API_BASE_URL=http://localhost:3001      # API Gateway
 
 # Authentication
-TEST_API_KEY=your_api_key
-TEST_USER_TOKEN=your_test_token
+TEST_API_KEY=test_api_key_123
+TEST_USER_TOKEN=test_jwt_token
+
+# Test User Credentials
+TEST_USER_EMAIL=test@fintech.com
+TEST_USER_PASSWORD=TestPassword123!
+
+# Test Configuration
+TEST_TIMEOUT=30000
+RETRY_COUNT=2
+PARALLEL_WORKERS=4
 ```
+
+**Note**: The mock system uses in-memory storage, so no external databases are required.
+
+### Automatic Server Management
+The framework automatically starts and stops the backend servers:
+- **UI Server** (port 3000) - Serves HTML pages and static files
+- **API Gateway** (port 3001) - Handles all API requests with mock data
 
 ### Browser Configuration
 Tests run on:
 - Chromium (Desktop Chrome)
-- Firefox (Desktop Firefox)
+- Firefox (Desktop Firefox) 
 - WebKit (Desktop Safari)
 
 ## Test Data Management

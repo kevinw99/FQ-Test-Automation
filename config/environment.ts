@@ -5,11 +5,6 @@ export interface EnvironmentConfig {
     userService: string;
     transactionService: string;
     notificationService: string;
-    apiGateway: string;
-  };
-  database: {
-    mongodb: string;
-    redis: string;
   };
   auth: {
     apiKey: string;
@@ -19,21 +14,21 @@ export interface EnvironmentConfig {
     email: string;
     password: string;
   };
+  testConfig: {
+    timeout: number;
+    retryCount: number;
+    parallelWorkers: number;
+  };
 }
 
 export const environments: Record<string, EnvironmentConfig> = {
   development: {
-    baseUrl: 'http://localhost:3000',
-    apiBaseUrl: 'http://localhost:3001',
+    baseUrl: 'http://localhost:3000',     // UI Server
+    apiBaseUrl: 'http://localhost:3001',  // API Gateway
     services: {
-      userService: 'http://localhost:3002',
-      transactionService: 'http://localhost:3003',
-      notificationService: 'http://localhost:3004',
-      apiGateway: 'http://localhost:3001'
-    },
-    database: {
-      mongodb: 'mongodb://localhost:27017/fintech_dev',
-      redis: 'redis://localhost:6379'
+      userService: 'http://localhost:3002',        // User Service
+      transactionService: 'http://localhost:3003', // Transaction Service
+      notificationService: 'http://localhost:3004' // Notification Service
     },
     auth: {
       apiKey: 'dev_api_key_123',
@@ -42,20 +37,20 @@ export const environments: Record<string, EnvironmentConfig> = {
     testUser: {
       email: 'test@fintech.com',
       password: 'TestPassword123!'
+    },
+    testConfig: {
+      timeout: 30000,
+      retryCount: 2,
+      parallelWorkers: 4
     }
   },
   staging: {
-    baseUrl: 'https://staging.fintech.com',
-    apiBaseUrl: 'https://api-staging.fintech.com',
+    baseUrl: 'https://staging-ui.fintech.com',
+    apiBaseUrl: 'https://staging-api.fintech.com',
     services: {
-      userService: 'https://user-staging.fintech.com',
-      transactionService: 'https://transaction-staging.fintech.com',
-      notificationService: 'https://notification-staging.fintech.com',
-      apiGateway: 'https://api-staging.fintech.com'
-    },
-    database: {
-      mongodb: 'mongodb://staging-db:27017/fintech_staging',
-      redis: 'redis://staging-redis:6379'
+      userService: 'https://staging-user.fintech.com',
+      transactionService: 'https://staging-transaction.fintech.com',
+      notificationService: 'https://staging-notification.fintech.com'
     },
     auth: {
       apiKey: 'staging_api_key_456',
@@ -64,33 +59,37 @@ export const environments: Record<string, EnvironmentConfig> = {
     testUser: {
       email: 'test@staging.fintech.com',
       password: 'StagingPassword123!'
+    },
+    testConfig: {
+      timeout: 45000,
+      retryCount: 3,
+      parallelWorkers: 2
     }
   },
   production: {
-    baseUrl: 'https://fintech.com',
+    baseUrl: 'https://app.fintech.com',
     apiBaseUrl: 'https://api.fintech.com',
     services: {
       userService: 'https://user.fintech.com',
       transactionService: 'https://transaction.fintech.com',
-      notificationService: 'https://notification.fintech.com',
-      apiGateway: 'https://api.fintech.com'
-    },
-    database: {
-      mongodb: 'mongodb://prod-db:27017/fintech_prod',
-      redis: 'redis://prod-redis:6379'
+      notificationService: 'https://notification.fintech.com'
     },
     auth: {
       apiKey: process.env.PROD_API_KEY || '',
       testUserToken: process.env.PROD_TEST_TOKEN || ''
     },
     testUser: {
-      email: 'test@prod.fintech.com',
+      email: process.env.PROD_TEST_EMAIL || '',
       password: process.env.PROD_TEST_PASSWORD || ''
+    },
+    testConfig: {
+      timeout: 60000,
+      retryCount: 5,
+      parallelWorkers: 1
     }
   }
 };
 
-export function getEnvironmentConfig(): EnvironmentConfig {
-  const env = process.env.NODE_ENV || 'development';
-  return environments[env] || environments.development;
-}
+export const getEnvironment = (envName: string = 'development'): EnvironmentConfig => {
+  return environments[envName] || environments.development;
+};
