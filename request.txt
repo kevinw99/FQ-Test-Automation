@@ -1,0 +1,7 @@
+what is /health for
+what is notification service for
+with apigateway, is it still microservice
+what is the difference between apigateway and service mesh
+
+currently I am log in in github with my work account, how can I run command line to upload this project to my
+personal account kevinweng99@gmail.com?

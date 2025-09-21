@@ -1,0 +1,25 @@
+{
+  "name": "fintech-mock-backend",
+  "version": "1.0.0",
+  "description": "Mock backend services for fintech test automation",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "node server.js",
+    "start:services": "concurrently \"npm run start:gateway\" \"npm run start:user\" \"npm run start:transaction\" \"npm run start:notification\"",
+    "start:gateway": "node services/api-gateway.js",
+    "start:user": "node services/user-service.js",
+    "start:transaction": "node services/transaction-service.js",
+    "start:notification": "node services/notification-service.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "uuid": "^9.0.0",
+    "concurrently": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+

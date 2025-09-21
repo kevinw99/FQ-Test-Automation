@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTech Dashboard - Mock UI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .logout-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .account-balance {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin: 1rem 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .recent-transactions {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .actions-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-details h4 {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .transaction-details p {
+            color: #666;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+        }
+
+        .transaction-amount.credit {
+            color: #28a745;
+        }
+
+        .transaction-amount.debit {
+            color: #dc3545;
+        }
+
+        .transfer-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quick-action {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .quick-action:hover {
+            background: #e9ecef;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>FinTech Dashboard</h1>
+        <div class="user-info">
+            <div class="notification-icon" data-testid="notification-icon">
+                🔔
+                <span class="notification-badge" data-testid="notification-badge">3</span>
+            </div>
+            <span data-testid="user-name">John Doe</span>
+            <button class="logout-button" data-testid="logout-button" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <h2>Welcome back, <span>John Doe</span>!</h2>
+            <p>Your account balance:</p>
+            <div class="account-balance" data-testid="account-balance">$12,847.50</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="recent-transactions" data-testid="recent-transactions">
+                <h3>Recent Transactions</h3>
+
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <h4 data-testid="transaction-description">Grocery Store Purchase</h4>
+                        <p data-testid="transaction-date">Today, 2:30 PM</p>
+                    </div>
+                    <div class="transaction-amount debit" data-testid="transaction-amount">-$87.42</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <h4 data-testid="transaction-description">Salary Deposit</h4>
+                        <p data-testid="transaction-date">Yesterday, 9:00 AM</p>
+                    </div>
+                    <div class="transaction-amount credit" data-testid="transaction-amount">+$3,200.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <h4 data-testid="transaction-description">Online Transfer</h4>
+                        <p data-testid="transaction-date">Sep 19, 11:45 AM</p>
+                    </div>
+                    <div class="transaction-amount debit" data-testid="transaction-amount">-$250.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <h4 data-testid="transaction-description">ATM Withdrawal</h4>
+                        <p data-testid="transaction-date">Sep 18, 3:15 PM</p>
+                    </div>
+                    <div class="transaction-amount debit" data-testid="transaction-amount">-$100.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <h4 data-testid="transaction-description">Investment Return</h4>
+                        <p data-testid="transaction-date">Sep 17, 10:30 AM</p>
+                    </div>
+                    <div class="transaction-amount credit" data-testid="transaction-amount">+$425.75</div>
+                </div>
+            </div>
+
+            <div class="actions-panel">
+                <button class="transfer-button" data-testid="transfer-button" onclick="goToTransfer()">
+                    Make Transfer
+                </button>
+
+                <h3>Quick Actions</h3>
+                <div class="quick-actions">
+                    <a href="transactions.html" class="quick-action">View All Transactions</a>
+                    <a href="#" class="quick-action">Pay Bills</a>
+                    <a href="#" class="quick-action">Deposit Check</a>
+                    <a href="#" class="quick-action">Account Settings</a>
+                    <a href="#" class="quick-action">Help & Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            window.location.href = 'login.html';
+        }
+
+        function goToTransfer() {
+            window.location.href = 'transactions.html';
+        }
+
+        // Simulate real-time balance updates
+        function updateBalance() {
+            const balance = document.querySelector('[data-testid="account-balance"]');
+            const currentBalance = 12847.50;
+            const variation = (Math.random() - 0.5) * 10; // Small random variation
+            const newBalance = currentBalance + variation;
+            balance.textContent = `$${newBalance.toFixed(2)}`;
+        }
+
+        // Update balance every 30 seconds
+        setInterval(updateBalance, 30000);
+    </script>
+</body>
+</html>

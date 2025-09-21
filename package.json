@@ -1,0 +1,31 @@
+{
+  "name": "fintech-test-automation",
+  "version": "1.0.0",
+  "description": "Test automation framework for fintech microservices",
+  "scripts": {
+    "test": "playwright test --project=chromium",
+    "test:all": "playwright test",
+    "test:api": "playwright test tests/api/ --project=api-tests",
+    "test:ui": "playwright test tests/ui/ --project=chromium",
+    "test:ui:all": "playwright test tests/ui/",
+    "test:ui:firefox": "playwright test tests/ui/ --project=firefox",
+    "test:ui:webkit": "playwright test tests/ui/ --project=webkit",
+    "test:ui:headed": "playwright test tests/ui/ --project=chromium --headed",
+    "test:ui:debug": "playwright test tests/ui/ --project=chromium --debug",
+    "test:ui:step": "playwright test tests/ui/ --project=chromium --headed --slowMo=1000",
+    "test:ui:interactive": "playwright test tests/ui/ --project=chromium --headed --slowMo=2000 --max-failures=1",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "install:browsers": "playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "@faker-js/faker": "^8.3.1"
+  }
+}
