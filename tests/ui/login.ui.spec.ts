@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { DashboardPage } from '../../pages/DashboardPage';
-import { getEnvironmentConfig } from '../../config/environment';
+import { getEnvironment } from '../../config/environment';
 
 test.describe('Login Page UI Tests', () => {
   let loginPage: LoginPage;
   let dashboardPage: DashboardPage;
-  const config = getEnvironmentConfig();
+  const config = getEnvironment();
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);

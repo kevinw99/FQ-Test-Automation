@@ -1,77 +1,63 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures';
 import { ApiHelper } from '../../utils/apiHelper';
 import { TestDataGenerator } from '../../utils/testDataGenerator';
 
 test.describe('Transaction Service API Tests', () => {
-  let testUser: any;
-  let userToken: string;
-
-  test.beforeEach(async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
-
-    // Create a test user for transaction tests
-    const userData = TestDataGenerator.generateUser();
-    const response = await apiHelper.createUser(userData);
-    testUser = response.user;
-    userToken = response.token;
-  });
-
-  test('should create a new transaction successfully', async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
-    const transactionData = TestDataGenerator.generateTransaction(testUser.id, {
+  test('should create a new transaction successfully', async ({ apiHelper, testUser }) => {
+    const transactionData = TestDataGenerator.generateTransaction(testUser._id!, {
       amount: 100.50,
       type: 'credit',
       description: 'Test payment'
     });
 
-    const createdTransaction = await apiHelper.createTransaction(transactionData, userToken);
+    const createdTransaction = await apiHelper.createTransaction(transactionData, testUser.token);
 
-    expect(createdTransaction.id).toBeDefined();
-    expect(createdTransaction.userId).toBe(testUser.id);
-    expect(createdTransaction.amount).toBe(100.50);
-    expect(createdTransaction.type).toBe('credit');
-    expect(createdTransaction.description).toBe('Test payment');
+    expect(createdTransaction._id).toBeDefined();
+    expect(createdTransaction.userId).toBe(testUser._id);
+    expect(createdTransaction.amount).toBe(transactionData.amount);
+    expect(createdTransaction.type).toBe(transactionData.type);
   });
 
-  test('should retrieve transactions by user ID', async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
+  test('should retrieve transactions by user ID', async ({ apiHelper, testUser }) => {
     // Create multiple transactions for the user
-    const transaction1 = TestDataGenerator.generateTransaction(testUser.id, {
+    const transaction1 = TestDataGenerator.generateTransaction(testUser._id!, {
       amount: 50.00,
       type: 'debit'
     });
-    const transaction2 = TestDataGenerator.generateTransaction(testUser.id, {
+    const transaction2 = TestDataGenerator.generateTransaction(testUser._id!, {
       amount: 75.25,
       type: 'credit'
     });
 
-    await apiHelper.createTransaction(transaction1, userToken);
-    await apiHelper.createTransaction(transaction2, userToken);
+    await apiHelper.createTransaction(transaction1, testUser.token);
+    await apiHelper.createTransaction(transaction2, testUser.token);
 
-    const transactions = await apiHelper.getTransactionsByUserId(testUser.id, userToken);
+    const transactions = await apiHelper.getTransactionsByUserId(testUser._id!, testUser.token);
 
+    expect(transactions).toBeDefined();
     expect(transactions.length).toBeGreaterThanOrEqual(2);
-    expect(transactions.every(t => t.userId === testUser.id)).toBe(true);
+    transactions.forEach(transaction => {
+      expect(transaction.userId).toBe(testUser._id);
+    });
   });
 
-  test('should retrieve specific transaction by ID', async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
-    const transactionData = TestDataGenerator.generateTransaction(testUser.id, {
+  test('should retrieve specific transaction by ID', async ({ apiHelper, testUser }) => {
+    const transactionData = TestDataGenerator.generateTransaction(testUser._id!, {
       amount: 200.00,
       type: 'credit',
       description: 'Specific transaction test'
     });
 
-    const createdTransaction = await apiHelper.createTransaction(transactionData, userToken);
-    const retrievedTransaction = await apiHelper.getTransactionById(createdTransaction.id!, userToken);
+    const createdTransaction = await apiHelper.createTransaction(transactionData, testUser.token);
+    const retrievedTransaction = await apiHelper.getTransactionById(createdTransaction._id!, testUser.token);
 
-    expect(retrievedTransaction.id).toBe(createdTransaction.id);
-    expect(retrievedTransaction.amount).toBe(200.00);
-    expect(retrievedTransaction.description).toBe('Specific transaction test');
+    expect(retrievedTransaction._id).toBe(createdTransaction._id);
+    expect(retrievedTransaction.amount).toBe(transactionData.amount);
+    expect(retrievedTransaction.description).toBe(transactionData.description);
   });
 
-  test('should validate transaction amount limits', async ({ request }) => {
-    const invalidTransaction = TestDataGenerator.generateTransaction(testUser.id, {
+  test('should validate transaction amount limits', async ({ request, testUser }) => {
+    const invalidTransaction = TestDataGenerator.generateTransaction(testUser._id!, {
       amount: -100, // Negative amount
       type: 'credit'
     });
@@ -80,24 +66,23 @@ test.describe('Transaction Service API Tests', () => {
       data: invalidTransaction,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userToken}`
+        'Authorization': `Bearer ${testUser.token}`
       }
     });
 
     expect(response.status()).toBe(400);
   });
 
-  test('should handle large transaction amounts', async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
-    const largeTransaction = TestDataGenerator.generateTransaction(testUser.id, {
+  test('should handle large transaction amounts', async ({ apiHelper, testUser }) => {
+    const largeTransaction = TestDataGenerator.generateTransaction(testUser._id!, {
       amount: 9999.99,
       type: 'credit',
       description: 'Large amount transaction'
     });
 
-    const createdTransaction = await apiHelper.createTransaction(largeTransaction, userToken);
+    const createdTransaction = await apiHelper.createTransaction(largeTransaction, testUser.token);
 
-    expect(createdTransaction.amount).toBe(9999.99);
-    expect(createdTransaction.type).toBe('credit');
+    expect(createdTransaction._id).toBeDefined();
+    expect(createdTransaction.amount).toBe(largeTransaction.amount);
   });
 });

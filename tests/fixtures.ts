@@ -5,7 +5,7 @@ import { TestDataGenerator, UserData } from '../utils/testDataGenerator';
 // Extend the base test to include fixtures
 export const test = base.extend<{
   apiHelper: ApiHelper;
-  testUser: { user: UserData; token: string };
+  testUser: UserData & { token: string };
 }>({
   apiHelper: async ({ request }, use) => {
     const apiHelper = new ApiHelper(request);
@@ -17,11 +17,19 @@ export const test = base.extend<{
     const userData = TestDataGenerator.generateUser();
     const response = await apiHelper.createUser(userData);
 
-    await use(response);
+    // Create a combined user object with token
+    const testUser = {
+      ...response.user,
+      token: response.token
+    };
+
+    await use(testUser);
 
     // Cleanup: Delete the test user after the test
     try {
-      await apiHelper.deleteUser(response.user.id!, response.token);
+      if (response.user && response.user._id) {
+        await apiHelper.deleteUser(response.user._id, response.token);
+      }
     } catch (error) {
       console.warn('Failed to cleanup test user:', error);
     }

@@ -17,7 +17,13 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
-    "install:browsers": "playwright install"
+    "install:browsers": "playwright install",
+    "servers:start": "./start-microservices.sh",
+    "servers:stop": "pkill -f 'node server.js' 2>/dev/null || true",
+    "servers:restart": "npm run servers:stop && sleep 2 && npm run servers:start",
+    "test:fresh": "npm run servers:restart && sleep 5 && npm run test",
+    "test:api:fresh": "npm run servers:restart && sleep 5 && npm run test:api",
+    "test:all:fresh": "npm run servers:restart && sleep 5 && npm run test:all"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

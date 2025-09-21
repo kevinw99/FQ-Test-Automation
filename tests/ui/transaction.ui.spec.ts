@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { DashboardPage } from '../../pages/DashboardPage';
 import { TransactionPage } from '../../pages/TransactionPage';
-import { getEnvironmentConfig } from '../../config/environment';
+import { getEnvironment } from '../../config/environment';
 
 test.describe('Transaction Page UI Tests', () => {
   let loginPage: LoginPage;
   let dashboardPage: DashboardPage;
   let transactionPage: TransactionPage;
-  const config = getEnvironmentConfig();
+  const config = getEnvironment();
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);

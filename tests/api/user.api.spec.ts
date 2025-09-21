@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures';
 import { ApiHelper } from '../../utils/apiHelper';
 import { TestDataGenerator } from '../../utils/testDataGenerator';
 
@@ -16,34 +16,24 @@ test.describe('User Service API Tests', () => {
     expect(response.token).toBeDefined();
   });
 
-  test('should retrieve user by ID', async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
-    // Create a user first
-    const userData = TestDataGenerator.generateUser();
-    const createResponse = await apiHelper.createUser(userData);
+  test('should retrieve user by ID', async ({ apiHelper, testUser }) => {
+    const retrievedUser = await apiHelper.getUserById(testUser._id!, testUser.token);
 
-    const retrievedUser = await apiHelper.getUserById(createResponse.user.id!, createResponse.token);
-
-    expect(retrievedUser.id).toBe(createResponse.user.id);
-    expect(retrievedUser.email).toBe(userData.email);
+    expect(retrievedUser._id).toBe(testUser._id);
+    expect(retrievedUser.email).toBe(testUser.email);
   });
 
-  test('should update user information', async ({ request }) => {
-    const apiHelper = new ApiHelper(request);
-    // Create a user first
-    const userData = TestDataGenerator.generateUser();
-    const createResponse = await apiHelper.createUser(userData);
-
+  test('should update user information', async ({ apiHelper, testUser }) => {
     const updateData = {
       firstName: 'UpdatedFirstName',
       lastName: 'UpdatedLastName'
     };
 
-    const updatedUser = await apiHelper.updateUser(createResponse.user.id!, updateData, createResponse.token);
+    const updatedUser = await apiHelper.updateUser(testUser._id!, updateData, testUser.token);
 
     expect(updatedUser.firstName).toBe(updateData.firstName);
     expect(updatedUser.lastName).toBe(updateData.lastName);
-    expect(updatedUser.email).toBe(userData.email); // Should remain unchanged
+    expect(updatedUser.email).toBe(testUser.email); // Should remain unchanged
   });
 
   test('should delete user successfully', async ({ request }) => {
@@ -52,11 +42,11 @@ test.describe('User Service API Tests', () => {
     const userData = TestDataGenerator.generateUser();
     const createResponse = await apiHelper.createUser(userData);
 
-    await apiHelper.deleteUser(createResponse.user.id!, createResponse.token);
+    await apiHelper.deleteUser(createResponse.user._id!, createResponse.token);
 
     // Verify user is deleted by trying to retrieve it (should fail)
     await expect(async () => {
-      await apiHelper.getUserById(createResponse.user.id!, createResponse.token);
+      await apiHelper.getUserById(createResponse.user._id!, createResponse.token);
     }).rejects.toThrow();
   });
 

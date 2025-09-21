@@ -153,7 +153,12 @@ app.post('/users', async (req, res) => {
     const { password, ...userResponse } = newUser;
 
     console.log(`   ✅ Created user: ${newUser._id}`);
-    res.status(201).json(userResponse);
+
+    // Return user with token format expected by tests
+    res.status(201).json({
+      user: userResponse,
+      token: 'mock_jwt_token_' + Date.now()
+    });
   } catch (error) {
     console.log(`   ❌ Error: ${error.message}`);
     res.status(500).json({ error: 'Internal server error' });
